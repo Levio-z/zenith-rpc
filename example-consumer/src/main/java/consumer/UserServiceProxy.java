@@ -5,8 +5,8 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.zenith.example.common.model.User;
 import com.zenith.example.common.service.UserService;
-import com.zenith.zenithrpc.JdkSerializer;
-import com.zenith.zenithrpc.Serializer;
+import com.zenith.zenithrpc.serializer.JdkSerializer;
+import com.zenith.zenithrpc.serializer.Serializer;
 import com.zenith.zenithrpc.model.RpcRequest;
 import com.zenith.zenithrpc.model.RpcResponse;
 
