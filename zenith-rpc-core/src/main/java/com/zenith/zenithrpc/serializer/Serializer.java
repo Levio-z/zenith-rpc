@@ -1,9 +1,13 @@
-package com.zenith.zenithrpc;
+package com.zenith.zenithrpc.serializer;
 
 import java.io.IOException;
 
+
 /**
  * 序列化器接口
+ *
+ * @author zenith
+ * @date 2024/08/16
  */
 public interface Serializer {
 

@@ -2,10 +2,12 @@ package com.zenith.zenithrpc.proxy;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
-import com.zenith.zenithrpc.JdkSerializer;
-import com.zenith.zenithrpc.Serializer;
+import com.zenith.zenithrpc.RpcApplication;
+import com.zenith.zenithrpc.serializer.JdkSerializer;
+import com.zenith.zenithrpc.serializer.Serializer;
 import com.zenith.zenithrpc.model.RpcRequest;
 import com.zenith.zenithrpc.model.RpcResponse;
+import com.zenith.zenithrpc.serializer.SerializerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
@@ -19,9 +21,11 @@ import java.lang.reflect.InvocationHandler;
 public class ServiceProxy implements InvocationHandler {
 
 
+
     public Object invoke(Object proxy, java.lang.reflect.Method method, Object[] args) throws Throwable {
+
         // 指定序列化器
-        Serializer serializer = new JdkSerializer();
+        final Serializer serializer = SerializerFactory.getInstance(RpcApplication.getRpcConfig().getSerializer());
 
         // 发请求
         RpcRequest rpcRequest = RpcRequest.builder()
@@ -33,7 +37,7 @@ public class ServiceProxy implements InvocationHandler {
 
         try {
             byte[] bodyBytes = serializer.serialize(rpcRequest);
-            try (HttpResponse httpResponse = HttpRequest.post("http://localhost:8080")
+            try (HttpResponse httpResponse = HttpRequest.post("http://localhost:8083")
                     .body(bodyBytes)
                     .execute()) {
 

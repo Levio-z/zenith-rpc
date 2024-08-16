@@ -1,4 +1,4 @@
-package com.zenith.zenithrpc;
+package com.zenith.zenithrpc.serializer;
 
 import java.io.*;
 
