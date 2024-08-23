@@ -13,12 +13,12 @@ import com.zenith.zenithrpc.registry.RegistryFactory;
 import com.zenith.zenithrpc.server.HttpServer;
 import com.zenith.zenithrpc.server.VertxHttpServer;
 
+
 /**
- * 服务提供者示例
+ * 得到标记类型列表形式
  *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @learn <a href="https://codefather.cn">编程宝典</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
+ * @author zenith
+ * @date 2024/08/23
  */
 public class ProviderExample {
 
