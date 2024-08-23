@@ -1,6 +1,7 @@
 package com.zenith.zenithrpc.serializer;
 
 import cn.hutool.core.io.resource.ResourceUtil;
+import com.zenith.zenithrpc.registry.Registry;
 import com.zenith.zenithrpc.serializer.Serializer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,7 +49,7 @@ public class SpiLoader {
     /**
      * 动态加载的类列表
      */
-    private static final List<Class<?>> LOAD_CLASS_LIST = Arrays.asList(Serializer.class);
+    private static final List<Class<?>> LOAD_CLASS_LIST = Arrays.asList(Serializer.class, Registry.class);
 
     /**
      * 加载所有类型
