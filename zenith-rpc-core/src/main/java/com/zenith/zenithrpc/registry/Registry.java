@@ -14,7 +14,9 @@ import java.util.List;
  * @author zenith
  * @date 2024/08/22
  */
-public interface Registry {
+public interface Registry
+
+{
 
     /**
      * 初始化
@@ -49,4 +51,16 @@ public interface Registry {
      * 服务销毁
      */
     void destroy();
+
+    /**
+     * 心跳检测（服务端）
+     */
+    void heartBeat();
+
+    /**
+     * 监听（消费端）
+     *
+     * @param serviceNodeKey
+     */
+    void watch(String serviceNodeKey);
 }
