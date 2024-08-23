@@ -1,7 +1,10 @@
 package com.zenith.zenithrpc;
 
+import com.zenith.zenithrpc.config.RegistryConfig;
 import com.zenith.zenithrpc.config.RpcConfig;
 import com.zenith.zenithrpc.constant.RpcConstant;
+import com.zenith.zenithrpc.registry.Registry;
+import com.zenith.zenithrpc.registry.RegistryFactory;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -17,6 +20,12 @@ public class RpcApplication {
     public static void init(RpcConfig newRpcConfig) {
         rpcConfig = newRpcConfig;
         log.info("rpc init, config = {}", newRpcConfig.toString());
+
+        // 注册中心初始化
+        RegistryConfig registryConfig = rpcConfig.getRegistryConfig();
+        Registry registry = RegistryFactory.getInstance(registryConfig.getRegistry());
+        registry.init(registryConfig);
+        log.info("registry init, config = {}", registryConfig);
     }
 
     /**
