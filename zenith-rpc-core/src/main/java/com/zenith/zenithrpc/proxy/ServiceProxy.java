@@ -1,12 +1,14 @@
 package com.zenith.zenithrpc.proxy;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.zenith.zenithrpc.RpcApplication;
 import com.zenith.zenithrpc.config.RpcConfig;
 import com.zenith.zenithrpc.constant.RpcConstant;
 import com.zenith.zenithrpc.model.ServiceMetaInfo;
+import com.zenith.zenithrpc.protocol.*;
 import com.zenith.zenithrpc.registry.Registry;
 import com.zenith.zenithrpc.registry.RegistryFactory;
 import com.zenith.zenithrpc.serializer.JdkSerializer;
@@ -14,10 +16,18 @@ import com.zenith.zenithrpc.serializer.Serializer;
 import com.zenith.zenithrpc.model.RpcRequest;
 import com.zenith.zenithrpc.model.RpcResponse;
 import com.zenith.zenithrpc.serializer.SerializerFactory;
+import com.zenith.zenithrpc.server.tcp.ProtocolMessageDecoder;
+import com.zenith.zenithrpc.server.tcp.ProtocolMessageEncoder;
+import com.zenith.zenithrpc.server.tcp.VertxTcpClient;
+import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
+import io.vertx.core.net.NetClient;
+import io.vertx.core.net.NetSocket;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 服务代理（JDK 动态代理）
@@ -46,8 +56,6 @@ public class ServiceProxy implements InvocationHandler {
 
 
         try {
-            byte[] bodyBytes = serializer.serialize(rpcRequest);
-
             // 从注册中心获取服务提供者地址
             RpcConfig rpcConfig = RpcApplication.getRpcConfig();
             Registry registry = RegistryFactory.getInstance(rpcConfig.getRegistryConfig().getRegistry());
@@ -59,19 +67,12 @@ public class ServiceProxy implements InvocationHandler {
                 throw new RuntimeException("暂无服务地址");
             }
             ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfoList.get(0);
-            try (HttpResponse httpResponse = HttpRequest.post(selectedServiceMetaInfo.getServiceAddress())
-                    .body(bodyBytes)
-                    .execute()) {
-
-                byte[] result = httpResponse.bodyBytes();
-                RpcResponse rpcResponse = serializer.deserialize(result, RpcResponse.class);
-                return rpcResponse.getData();
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
+            // 发送 TCP 请求
+            RpcResponse rpcResponse = VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
+            return rpcResponse.getData();
+        } catch (Exception  e) {
+            throw new RuntimeException("调用失败");
         }
 
-        return null;
     }
 }
