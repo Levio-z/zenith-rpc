@@ -12,6 +12,7 @@ import com.zenith.zenithrpc.registry.Registry;
 import com.zenith.zenithrpc.registry.RegistryFactory;
 import com.zenith.zenithrpc.server.HttpServer;
 import com.zenith.zenithrpc.server.VertxHttpServer;
+import com.zenith.zenithrpc.server.tcp.VertxTcpServer;
 
 
 /**
@@ -44,8 +45,12 @@ public class ProviderExample {
             throw new RuntimeException(e);
         }
 
-        // 启动 web 服务
-        HttpServer httpServer = new VertxHttpServer();
-        httpServer.doStart(RpcApplication.getRpcConfig().getServerPort());
+//        // 启动 web 服务
+//        HttpServer httpServer = new VertxHttpServer();
+//        httpServer.doStart(RpcApplication.getRpcConfig().getServerPort());
+
+        // 启动 TCP 服务
+        VertxTcpServer vertxTcpServer = new VertxTcpServer();
+        vertxTcpServer.doStart(RpcApplication.getRpcConfig().getServerPort());
     }
 }
