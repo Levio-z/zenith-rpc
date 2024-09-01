@@ -1,0 +1,3 @@
+roundRobin=com.zenith.zenithrpc.loadbalancer.RoundRobinLoadBalancer
+random=com.zenith.zenithrpc.loadbalancer.RandomLoadBalancer
+consistentHash=com.zenith.zenithrpc.loadbalancer.ConsistentHashLoadBalancer
