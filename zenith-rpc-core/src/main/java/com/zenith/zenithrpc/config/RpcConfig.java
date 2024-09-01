@@ -1,5 +1,6 @@
 package com.zenith.zenithrpc.config;
 
+import com.zenith.zenithrpc.fault.retry.RetryStrategyKeys;
 import com.zenith.zenithrpc.loadbalancer.LoadBalancerKeys;
 import com.zenith.zenithrpc.serializer.SerializerKeys;
 import lombok.Data;
@@ -41,6 +42,11 @@ public class RpcConfig {
      * 负载均衡
      */
     private String loadBalancer = LoadBalancerKeys.ROUND_ROBIN;
+
+    /**
+     * 重试策略
+     */
+    private String retryStrategy = RetryStrategyKeys.NO;
 
     /**
      * 注册中心配置
