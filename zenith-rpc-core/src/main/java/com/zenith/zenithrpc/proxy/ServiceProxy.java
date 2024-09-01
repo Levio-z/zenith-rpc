@@ -7,6 +7,8 @@ import cn.hutool.http.HttpResponse;
 import com.zenith.zenithrpc.RpcApplication;
 import com.zenith.zenithrpc.config.RpcConfig;
 import com.zenith.zenithrpc.constant.RpcConstant;
+import com.zenith.zenithrpc.loadbalancer.LoadBalancer;
+import com.zenith.zenithrpc.loadbalancer.LoadBalancerFactory;
 import com.zenith.zenithrpc.model.ServiceMetaInfo;
 import com.zenith.zenithrpc.protocol.*;
 import com.zenith.zenithrpc.registry.Registry;
@@ -26,7 +28,9 @@ import io.vertx.core.net.NetSocket;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -66,7 +70,12 @@ public class ServiceProxy implements InvocationHandler {
             if (CollUtil.isEmpty(serviceMetaInfoList)) {
                 throw new RuntimeException("暂无服务地址");
             }
-            ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfoList.get(0);
+
+            LoadBalancer loadBalancer = LoadBalancerFactory.getLoadBalancer(rpcConfig.getLoadBalancer());
+            Map<String, Object> requestParams = new HashMap<>();
+            requestParams.put("methodName",rpcRequest.getMethodName());
+            ServiceMetaInfo selectedServiceMetaInfo = loadBalancer.defaultSelectService(requestParams, serviceMetaInfoList);
+
             // 发送 TCP 请求
             RpcResponse rpcResponse = VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
             return rpcResponse.getData();

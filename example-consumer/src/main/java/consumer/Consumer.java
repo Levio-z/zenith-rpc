@@ -22,7 +22,13 @@ public class Consumer {
         // 调用
         User newUser = userService.getUser(user);
         if (newUser != null) {
-            System.out.println(newUser.getName());
+            System.out.println("打印用户名称："+newUser.getName());
+        } else {
+            System.out.println("user==null");
+        }
+        newUser = userService.getUser(user);
+        if (newUser != null) {
+            System.out.println("打印用户名称："+newUser.getName());
         } else {
             System.out.println("user==null");
         }
