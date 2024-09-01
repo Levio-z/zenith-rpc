@@ -1,0 +1,2 @@
+no=com.zenith.zenithrpc.fault.retry.NoRetryStrategy
+fixedInterval=com.zenith.zenithrpc.fault.retry.FixedIntervalRetryStrategy

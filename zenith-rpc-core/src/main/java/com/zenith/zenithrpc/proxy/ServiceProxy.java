@@ -7,6 +7,8 @@ import cn.hutool.http.HttpResponse;
 import com.zenith.zenithrpc.RpcApplication;
 import com.zenith.zenithrpc.config.RpcConfig;
 import com.zenith.zenithrpc.constant.RpcConstant;
+import com.zenith.zenithrpc.fault.retry.RetryStrategy;
+import com.zenith.zenithrpc.fault.retry.RetryStrategyFactory;
 import com.zenith.zenithrpc.loadbalancer.LoadBalancer;
 import com.zenith.zenithrpc.loadbalancer.LoadBalancerFactory;
 import com.zenith.zenithrpc.model.ServiceMetaInfo;
@@ -75,11 +77,14 @@ public class ServiceProxy implements InvocationHandler {
             Map<String, Object> requestParams = new HashMap<>();
             requestParams.put("methodName",rpcRequest.getMethodName());
             ServiceMetaInfo selectedServiceMetaInfo = loadBalancer.defaultSelectService(requestParams, serviceMetaInfoList);
-
-            // 发送 TCP 请求
-            RpcResponse rpcResponse = VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
+            // 使用重试机制
+            RetryStrategy retryStrategy = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy());
+            RpcResponse rpcResponse = retryStrategy.doRetry(() ->
+                    VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo)
+            );
             return rpcResponse.getData();
         } catch (Exception  e) {
+            e.printStackTrace();
             throw new RuntimeException("调用失败");
         }
 
