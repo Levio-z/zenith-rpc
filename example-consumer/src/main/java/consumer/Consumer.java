@@ -3,6 +3,7 @@ package consumer;
 import com.zenith.example.common.model.User;
 import com.zenith.example.common.service.UserService;
 import com.zenith.zenithrpc.RpcApplication;
+import com.zenith.zenithrpc.bootstrap.ConsumerBootstrap;
 import com.zenith.zenithrpc.proxy.ServiceProxyFactory;
 import lombok.Data;
 
@@ -12,8 +13,7 @@ import lombok.Data;
 @Data
 public class Consumer {
     public static void main(String[] args) {
-        // RPC 框架初始化
-        RpcApplication.init();
+        ConsumerBootstrap.init();
         // 需要获取UserService实现类对象
         UserService userService = ServiceProxyFactory.getProxy(UserService.class);
         User user = new User();
@@ -26,15 +26,7 @@ public class Consumer {
         } else {
             System.out.println("user==null");
         }
-        newUser = userService.getUser(user);
-        if (newUser != null) {
-            System.out.println("打印用户名称："+newUser.getName());
-        } else {
-            System.out.println("user==null");
-        }
 
-        long number = userService.getNumber();
-        System.out.println(number);
     }
 
 }

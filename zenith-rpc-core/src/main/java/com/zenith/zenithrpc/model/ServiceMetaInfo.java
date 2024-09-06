@@ -1,7 +1,10 @@
 package com.zenith.zenithrpc.model;
 
 import cn.hutool.core.util.StrUtil;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 服务元信息
@@ -10,6 +13,9 @@ import lombok.Data;
  * @date 2024/08/22
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ServiceMetaInfo {
 
     /**

@@ -81,7 +81,6 @@ public class VertxTcpClient {
         RpcResponse rpcResponse = responseFuture.get();
         // 记得关闭连接
         netClient.close();
-        throw new RuntimeException("sss");
-//        return rpcResponse;
+        return rpcResponse;
     }
 }

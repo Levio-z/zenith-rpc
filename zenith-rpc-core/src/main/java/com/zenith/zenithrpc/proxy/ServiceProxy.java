@@ -9,6 +9,8 @@ import com.zenith.zenithrpc.config.RpcConfig;
 import com.zenith.zenithrpc.constant.RpcConstant;
 import com.zenith.zenithrpc.fault.retry.RetryStrategy;
 import com.zenith.zenithrpc.fault.retry.RetryStrategyFactory;
+import com.zenith.zenithrpc.fault.tolerant.TolerantStrategy;
+import com.zenith.zenithrpc.fault.tolerant.TolerantStrategyFactory;
 import com.zenith.zenithrpc.loadbalancer.LoadBalancer;
 import com.zenith.zenithrpc.loadbalancer.LoadBalancerFactory;
 import com.zenith.zenithrpc.model.ServiceMetaInfo;
@@ -78,10 +80,17 @@ public class ServiceProxy implements InvocationHandler {
             requestParams.put("methodName",rpcRequest.getMethodName());
             ServiceMetaInfo selectedServiceMetaInfo = loadBalancer.defaultSelectService(requestParams, serviceMetaInfoList);
             // 使用重试机制
-            RetryStrategy retryStrategy = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy());
-            RpcResponse rpcResponse = retryStrategy.doRetry(() ->
-                    VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo)
-            );
+            RpcResponse rpcResponse = null;
+            try {
+                RetryStrategy retryStrategy = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy());
+                rpcResponse = retryStrategy.doRetry(() ->
+                        VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo)
+                );
+            } catch (Exception e) {
+                // 容错机制
+                TolerantStrategy tolerantStrategy = TolerantStrategyFactory.getInstance(rpcConfig.getTolerantStrategy());
+                rpcResponse = tolerantStrategy.doResponse(null, e);
+            }
             return rpcResponse.getData();
         } catch (Exception  e) {
             e.printStackTrace();
