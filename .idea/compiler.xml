@@ -7,14 +7,19 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="zenith-rpc-core" />
+        <module name="example-springboot-provider" />
+        <module name="example-springboot-consumer" />
         <module name="example-provider" />
         <module name="example-common" />
+        <module name="zenith-rpc-core" />
+        <module name="zenith-rpc-spring-boot-starter" />
         <module name="example-consumer" />
         <module name="zenith-rpc-easy" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="deexample-springboot-provider" target="1.8" />
+      <module name="demexample-springboot-consumer" target="1.8" />
       <module name="wqeeqweqew" target="1.8" />
       <module name="zenith-rpc-easy (1)" target="1.8" />
     </bytecodeTargetLevel>
