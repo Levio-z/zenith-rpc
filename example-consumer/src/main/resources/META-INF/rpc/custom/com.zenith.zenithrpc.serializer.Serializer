@@ -1,0 +1,4 @@
+jdk=com.zenith.zenithrpc.serializer.JsonSerializer
+hessian=com.zenith.zenithrpc.serializer.HessianSerializer
+json=com.zenith.zenithrpc.serializer.JsonSerializer
+kryo=com.zenith.zenithrpc.serializer.KryoSerializer
